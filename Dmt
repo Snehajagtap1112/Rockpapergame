@@ -1,0 +1,210 @@
+Q1. a linear regression mode
+-->
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+data = pd.read_csv("path")
+from sklearn.model_selection import train_test_split
+X = data[['YearsExperience']]
+y = data['Salary']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+model = LinearRegression()
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+plt.scatter(X_train, y_train, color='blue', label='Training data')
+plt.plot(X_train, model.predict(X_train), color='red', label='Regression line')
+plt.scatter(X_test, y_test, color='green', label='Testing data')
+plt.plot(X_test, y_pred, color='orange', label='Test predictions')
+plt.xlabel('Experience (Years)')
+plt.ylabel('Salary')
+plt.title('Salary vs YearsExperience')
+plt.legend()
+plt.show()
+_____________________________________________________________________________________
+Q2. a polynomial regression
+-->
+import pandas as pd
+data = pd.read_csv('file path')
+from sklearn.model_selection import train_test_split
+X = data[['Level']]
+y = data['Salary']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import LinearRegression
+degree = 4
+poly_features = PolynomialFeatures(degree=degree)
+X_poly_train = poly_features.fit_transform(X_train)
+X_poly_test = poly_features.transform(X_test)
+model = LinearRegression()
+model.fit(X_poly_train, y_train)
+y_pred = model.predict(X_poly_test)
+import matplotlib.pyplot as plt
+import numpy as np
+X_grid = np.arange(min(X['Level']), max(X['Level']), 0.01).reshape(-1, 1)
+X_poly_grid = poly_features.transform(X_grid)
+plt.scatter(X_train, y_train, color='blue', label='Training data')
+plt.plot(X_grid, model.predict(X_poly_grid), color='red', label='Polynomial Regression')
+plt.scatter(X_test, y_test, color='green', label='Testing data')
+plt.scatter(X_test, y_pred, color='orange', marker='x', label='Test predictions')
+plt.xlabel('Position Level')
+plt.ylabel('Salary')
+plt.title('Salary vs Position Level (Polynomial Regression)')
+plt.legend()
+plt.show()
+_________________________________________________________________________________________________________________________
+Q3. a logistic regression model
+-->
+# Importing necessary libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+
+# Step 1: Load the dataset
+dataset = pd.read_csv("C:/Users/DIKSHA/Documents/Downloads/archive (3)/User_Data.csv")
+print(dataset.head())  # Display the first few rows of the dataset
+
+# Step 2: Select features (X) and target variable (y)
+X = dataset[['Age', 'EstimatedSalary']].values  # Selecting two features
+y = dataset['Purchased'].values  # Target variable
+
+# Step 3: Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Step 4: Standardize the features
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+# Step 5: Train the Logistic Regression model
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+# Step 6: Test the model on the testing subset
+y_pred = model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Accuracy on the test set: {accuracy * 100:.2f}%")
+
+# Step 7: Plot data points and decision boundary
+def plot_decision_boundary(X, y, model, title):
+    x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
+    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
+    xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.01),
+                         np.arange(y_min, y_max, 0.01))
+    Z = model.predict(np.c_[xx.ravel(), yy.ravel()])
+    Z = Z.reshape(xx.shape)
+
+    plt.contourf(xx, yy, Z, alpha=0.8, cmap=plt.cm.Paired)
+    plt.scatter(X[:, 0], X[:, 1], c=y, edgecolor='k', cmap=plt.cm.Paired)
+    plt.title(title)
+    plt.xlabel("Age (standardized)")
+    plt.ylabel("Estimated Salary (standardized)")
+    plt.show()
+
+# Plot decision boundary for the training set
+plot_decision_boundary(X_train, y_train, model, "Logistic Regression Decision Boundary (Training Set)")
+
+# Plot decision boundary for the testing set
+plot_decision_boundary(X_test, y_test, model, "Logistic Regression Decision Boundary (Testing Set)")
+
+__________________________________________________________________________________________________________________________
+Q.Decision Trees - Data Exploration -load dataset
+-->
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+data = pd.read_csv('C:/Users/DIKSHA/Documents/Downloads/archive (4)/Iris.csv' )
+print("Dataset Overview:")
+print(data.head())  # Display the first few rows of the dataset
+print("\nDataset Summary:")
+print(data.info())  # Display data types and non-null values for each column
+print("\nStatistical Summary:")
+print(data.describe())  # Display summary statistics for numeric columns
+print("\nNull Values Check:")
+print(data.isnull().sum())  # Check for missing values
+# Step 3: Visualize feature distributions
+features = ['SepalLengthCm', 'SepalWidthCm', 'PetalLengthCm', 'PetalWidthCm']
+# Histograms
+for feature in features:
+    plt.figure(figsize=(6, 4))
+    sns.histplot(data[feature], kde=True, bins=20, color='blue')
+    plt.title(f'Distribution of {feature}')
+    plt.xlabel(feature)
+    plt.ylabel('Frequency')
+    plt.show()
+# Boxplots for each feature
+plt.figure(figsize=(10, 6))
+sns.boxplot(data=data[features])
+plt.title('Boxplot for Iris Features')
+plt.ylabel('Feature Values')
+plt.show()
+____________________________________________________________________________________________________________________________
+Q.Building Decision Trees -split dataset
+-->
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+from sklearn.metrics import accuracy_score, classification_report
+import matplotlib.pyplot as plt
+# Step 1: Load the dataset     # Ensure you have the Iris dataset loaded into a pandas DataFrame
+path_to_csv = 'Iris.csv'  # Update this path if necessary
+data = pd.read_csv('C:/Users/DIKSHA/Documents/Downloads/archive (4)/Iris.csv')
+# Step 2: Prepare Data   # Selecting features and target variable
+features = ['SepalLengthCm', 'SepalWidthCm', 'PetalLengthCm', 'PetalWidthCm']
+X = data[features]  # Independent variables
+y = data['Species']  # Target variable
+# Step 3: Split the dataset into 80% training and 20% testing
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# Step 4: Train a Decision Tree Classifier
+dt_model = DecisionTreeClassifier(random_state=42)
+dt_model.fit(X_train, y_train)
+# Step 5: Evaluate the model
+y_pred = dt_model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Accuracy on test data: {accuracy:.2f}")
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
+plt.figure(figsize=(15, 10 ))  # Step 6: Visualize
+plot_tree(dt_model, feature_names=features, class_names=dt_model.classes_, filled=True)
+plt.title("Decision Tree Visualization")
+plt.show()
+_____________________________________________________________________________________________________________________________
+Q.k-Fold Cross-Validation
+-->
+from sklearn.datasets import load_iris
+from sklearn.model_selection import cross_val_score
+from sklearn.svm import SVC
+import numpy as np
+iris = load_iris()
+X = iris.data
+y = iris.target
+model = SVC()
+accuracies = cross_val_score(model, X, y, cv=5, scoring='accuracy')
+print("Accuracy for each fold: ", accuracies)
+mean_accuracy = np.mean(accuracies)
+print("Mean accuracy across all 5 folds: ", mean_accuracy)
+______________________________________________________________________________________________________________________________
+Q.Bootstrap Aggregation
+-->
+from sklearn.datasets import load_iris
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import BaggingClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+iris = load_iris()
+X = iris.data  
+y = iris.target  
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+base_model = DecisionTreeClassifier(random_state=42)
+bagging_model = BaggingClassifier (base_model, n_estimators=50, random_state=42)
+bagging_model.fit(X_train, y_train)
+y_pred = bagging_model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Model accuracy with Bagging (Decision Tree base model): {accuracy:.4f}")
+
+
+
+
