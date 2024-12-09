@@ -1,210 +1,1360 @@
-Q1. a linear regression mode
+JavaScript
+
+1.Write a JavaScript program to check whether three given numbers are increasing in strict or in soft mode. [Note: Strict mode -> 10, 15, 31 : Soft mode -> 24, 22, 31 or 22, 22, 31. using ES6:Define a function named number_order using arrow function syntax with parameters x, y, and z.]
 -->
-import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn.linear_model import LinearRegression
-data = pd.read_csv("path")
-from sklearn.model_selection import train_test_split
-X = data[['YearsExperience']]
-y = data['Salary']
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-model = LinearRegression()
-model.fit(X_train, y_train)
-y_pred = model.predict(X_test)
-plt.scatter(X_train, y_train, color='blue', label='Training data')
-plt.plot(X_train, model.predict(X_train), color='red', label='Regression line')
-plt.scatter(X_test, y_test, color='green', label='Testing data')
-plt.plot(X_test, y_pred, color='orange', label='Test predictions')
-plt.xlabel('Experience (Years)')
-plt.ylabel('Salary')
-plt.title('Salary vs YearsExperience')
-plt.legend()
-plt.show()
-_____________________________________________________________________________________
-Q2. a polynomial regression
+const number_order = (x, y, z) => {
+    if (x < y && y < z) {
+      console.log("Strict mode: Numbers are increasing strictly.");
+    } else if ((x <= y && y < z) || (x < y && y <= z) || (x <= y && y <= z)) {
+      console.log("Soft mode: Numbers are increasing in soft mode.");
+    } else {
+      console.log("Numbers are not increasing.");
+    }
+  };
+  
+  // Examples
+  number_order(10, 15, 31); // Strict mode: Numbers are increasing strictly.
+  number_order(24, 22, 31); // Soft mode: Numbers are increasing in soft mode.
+  number_order(22, 22, 31); // Soft mode: Numbers are increasing in soft mode.
+  -----------------------------------------------------------------------------------------------------------
+
+2.passing a function inside template literals using arrow function print a variable is greater than or less than and print true or false.
 -->
-import pandas as pd
-data = pd.read_csv('file path')
-from sklearn.model_selection import train_test_split
-X = data[['Level']]
-y = data['Salary']
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-from sklearn.preprocessing import PolynomialFeatures
-from sklearn.linear_model import LinearRegression
-degree = 4
-poly_features = PolynomialFeatures(degree=degree)
-X_poly_train = poly_features.fit_transform(X_train)
-X_poly_test = poly_features.transform(X_test)
-model = LinearRegression()
-model.fit(X_poly_train, y_train)
-y_pred = model.predict(X_poly_test)
-import matplotlib.pyplot as plt
-import numpy as np
-X_grid = np.arange(min(X['Level']), max(X['Level']), 0.01).reshape(-1, 1)
-X_poly_grid = poly_features.transform(X_grid)
-plt.scatter(X_train, y_train, color='blue', label='Training data')
-plt.plot(X_grid, model.predict(X_poly_grid), color='red', label='Polynomial Regression')
-plt.scatter(X_test, y_test, color='green', label='Testing data')
-plt.scatter(X_test, y_pred, color='orange', marker='x', label='Test predictions')
-plt.xlabel('Position Level')
-plt.ylabel('Salary')
-plt.title('Salary vs Position Level (Polynomial Regression)')
-plt.legend()
-plt.show()
-_________________________________________________________________________________________________________________________
-Q3. a logistic regression model
+
+const compareNumbers = (a, b) => `${a} is ${a > b ? 'greater than' : a < b ? 'less than' : 'equal to'} ${b}. It is ${a > b || a < b ? 'true' : 'false'}.`;
+
+console.log(compareNumbers(5, 10)); // Output: "5 is less than 10. It is true."
+console.log(compareNumbers(15, 5)); // Output: "15 is greater than 5. It is true."
+console.log(compareNumbers(10, 10)); // Output: "10 is equal to 10. It is false."
+
+
+----------------------------------------------------------------------------------------------------------
+3.Instead of manually enumerating all 52 card values, you can create a generator
+function that computes all permutations of the different suits and numbers, yielding each one by one. Also show all 52 cards? â ï¸.
 -->
-# Importing necessary libraries
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
 
-# Step 1: Load the dataset
-dataset = pd.read_csv("C:/Users/DIKSHA/Documents/Downloads/archive (3)/User_Data.csv")
-print(dataset.head())  # Display the first few rows of the dataset
+function* generateCards() {
+    const suits = ['â ï¸', 'â£ï¸', 'â¥ï¸', 'â¦ï¸'];
+    const numbers = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+  
+    for (const suit of suits) {
+      for (const number of numbers) {
+        yield `${number} ${suit}`;
+      }
+    }
+  }
+  
+  // Display all 52 cards
+  const cardsGenerator = generateCards();
+  for (let i = 1; i <= 52; i++) {
+    console.log(cardsGenerator.next().value);
+  }
+  ------------------------------------------------------------------------------------------------------------
 
-# Step 2: Select features (X) and target variable (y)
-X = dataset[['Age', 'EstimatedSalary']].values  # Selecting two features
-y = dataset['Purchased'].values  # Target variable
-
-# Step 3: Split the dataset into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-# Step 4: Standardize the features
-scaler = StandardScaler()
-X_train = scaler.fit_transform(X_train)
-X_test = scaler.transform(X_test)
-
-# Step 5: Train the Logistic Regression model
-model = LogisticRegression()
-model.fit(X_train, y_train)
-
-# Step 6: Test the model on the testing subset
-y_pred = model.predict(X_test)
-accuracy = accuracy_score(y_test, y_pred)
-print(f"Accuracy on the test set: {accuracy * 100:.2f}%")
-
-# Step 7: Plot data points and decision boundary
-def plot_decision_boundary(X, y, model, title):
-    x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-    xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.01),
-                         np.arange(y_min, y_max, 0.01))
-    Z = model.predict(np.c_[xx.ravel(), yy.ravel()])
-    Z = Z.reshape(xx.shape)
-
-    plt.contourf(xx, yy, Z, alpha=0.8, cmap=plt.cm.Paired)
-    plt.scatter(X[:, 0], X[:, 1], c=y, edgecolor='k', cmap=plt.cm.Paired)
-    plt.title(title)
-    plt.xlabel("Age (standardized)")
-    plt.ylabel("Estimated Salary (standardized)")
-    plt.show()
-
-# Plot decision boundary for the training set
-plot_decision_boundary(X_train, y_train, model, "Logistic Regression Decision Boundary (Training Set)")
-
-# Plot decision boundary for the testing set
-plot_decision_boundary(X_test, y_test, model, "Logistic Regression Decision Boundary (Testing Set)")
-
-__________________________________________________________________________________________________________________________
-Q.Decision Trees - Data Exploration -load dataset
+4.Write a JavaScript program to build  an array, using an iterator function and an initial seed value.[Use a while loop and Array.prototype.push() to call the function repeatedly until it returns false. The iterator function accepts one argument (seed) and must always return an array with two elements ([value, nextSeed]) or false to terminate.]
 -->
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-data = pd.read_csv('C:/Users/DIKSHA/Documents/Downloads/archive (4)/Iris.csv' )
-print("Dataset Overview:")
-print(data.head())  # Display the first few rows of the dataset
-print("\nDataset Summary:")
-print(data.info())  # Display data types and non-null values for each column
-print("\nStatistical Summary:")
-print(data.describe())  # Display summary statistics for numeric columns
-print("\nNull Values Check:")
-print(data.isnull().sum())  # Check for missing values
-# Step 3: Visualize feature distributions
-features = ['SepalLengthCm', 'SepalWidthCm', 'PetalLengthCm', 'PetalWidthCm']
-# Histograms
-for feature in features:
-    plt.figure(figsize=(6, 4))
-    sns.histplot(data[feature], kde=True, bins=20, color='blue')
-    plt.title(f'Distribution of {feature}')
-    plt.xlabel(feature)
-    plt.ylabel('Frequency')
-    plt.show()
-# Boxplots for each feature
-plt.figure(figsize=(10, 6))
-sns.boxplot(data=data[features])
-plt.title('Boxplot for Iris Features')
-plt.ylabel('Feature Values')
-plt.show()
-____________________________________________________________________________________________________________________________
-Q.Building Decision Trees -split dataset
--->
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier, plot_tree
-from sklearn.metrics import accuracy_score, classification_report
-import matplotlib.pyplot as plt
-# Step 1: Load the dataset     # Ensure you have the Iris dataset loaded into a pandas DataFrame
-path_to_csv = 'Iris.csv'  # Update this path if necessary
-data = pd.read_csv('C:/Users/DIKSHA/Documents/Downloads/archive (4)/Iris.csv')
-# Step 2: Prepare Data   # Selecting features and target variable
-features = ['SepalLengthCm', 'SepalWidthCm', 'PetalLengthCm', 'PetalWidthCm']
-X = data[features]  # Independent variables
-y = data['Species']  # Target variable
-# Step 3: Split the dataset into 80% training and 20% testing
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-# Step 4: Train a Decision Tree Classifier
-dt_model = DecisionTreeClassifier(random_state=42)
-dt_model.fit(X_train, y_train)
-# Step 5: Evaluate the model
-y_pred = dt_model.predict(X_test)
-accuracy = accuracy_score(y_test, y_pred)
-print(f"Accuracy on test data: {accuracy:.2f}")
-print("\nClassification Report:")
-print(classification_report(y_test, y_pred))
-plt.figure(figsize=(15, 10 ))  # Step 6: Visualize
-plot_tree(dt_model, feature_names=features, class_names=dt_model.classes_, filled=True)
-plt.title("Decision Tree Visualization")
-plt.show()
-_____________________________________________________________________________________________________________________________
-Q.k-Fold Cross-Validation
--->
-from sklearn.datasets import load_iris
-from sklearn.model_selection import cross_val_score
-from sklearn.svm import SVC
-import numpy as np
-iris = load_iris()
-X = iris.data
-y = iris.target
-model = SVC()
-accuracies = cross_val_score(model, X, y, cv=5, scoring='accuracy')
-print("Accuracy for each fold: ", accuracies)
-mean_accuracy = np.mean(accuracies)
-print("Mean accuracy across all 5 folds: ", mean_accuracy)
-______________________________________________________________________________________________________________________________
-Q.Bootstrap Aggregation
--->
-from sklearn.datasets import load_iris
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import BaggingClassifier
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
-iris = load_iris()
-X = iris.data  
-y = iris.target  
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
-base_model = DecisionTreeClassifier(random_state=42)
-bagging_model = BaggingClassifier (base_model, n_estimators=50, random_state=42)
-bagging_model.fit(X_train, y_train)
-y_pred = bagging_model.predict(X_test)
-accuracy = accuracy_score(y_test, y_pred)
-print(f"Model accuracy with Bagging (Decision Tree base model): {accuracy:.4f}")
+
+const buildArray = (iterator, seed) => {
+    const result = [];
+    let nextSeed = seed;
+    
+    while (true) {
+      const iteration = iterator(nextSeed);
+      
+      if (iteration) {
+        const [value, newSeed] = iteration;
+        result.push(value);
+        nextSeed = newSeed;
+      } else {
+        break;
+      }
+    }
+    
+    return result;
+  };
+  
+  // Example usage
+  const iteratorFunction = (seed) => {
+    if (seed <= 10) {
+      return [seed, seed + 1];
+    } else {
+      return false;
+    }
+  };
+  
+  const seedValue = 1;
+  const newArray = buildArray(iteratorFunction, seedValue);
+  console.log(newArray); // Output: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  
 
 
+------------------------------------------------------------------------------------------------------------------
+5.Write a JavaScript program to convert a string to snake case also in KebabCase.[Note: Break the string into words and combine them adding _ as a separator, using a regex. Use String.prototype.match() to break the string into words using an appropriate regexp. Use Array.prototype.map(), Array.prototype.slice(), Array.prototype.join() and  String.prototype.toLowerCase() to combine them,adding_as a separator.
+-->
+
+const toSnakeCase = (str) => str.match(/[a-zA-Z0-9]+/g).map(w => w.toLowerCase()).join('_');
+
+const toKebabCase = (str) => str.match(/[a-zA-Z0-9]+/g).map(w => w.toLowerCase()).join('-');
+
+// Example usage
+const inputString = "Convert This String To Snake Case";
+console.log("Snake Case:", toSnakeCase(inputString)); // Output: convert_this_string_to_snake_case
+console.log("Kebab Case:", toKebabCase(inputString)); // Output: convert-this-string-to-kebab-case
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+6.Write a JavaScript program that implements a function that performs a series of asynchronous operations in sequence using Promises and 'async/await'.
+-->
+
+const asyncOperation = (operationNumber, delay) => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      console.log(`Async operation ${operationNumber} completed`);
+      resolve(operationNumber);
+    }, delay);
+  });
+};
+
+const performSequentialAsyncOperations = async () => {
+  console.log("Starting sequential asynchronous operations...");
+  
+  const result1 = await asyncOperation(1, 2000);
+  const result2 = await asyncOperation(2, 1500);
+  const result3 = await asyncOperation(3, 1000);
+
+  console.log("All sequential asynchronous operations completed successfully");
+  return [result1, result2, result3];
+};
+
+performSequentialAsyncOperations()
+  .then(results => console.log("Results:", results))
+  .catch(error => console.error("Error occurred:", error));
+
+-----------------------------------------------------------------------------------------------------------------------
+
+7.Write a JavaScript program to perform left-to-right function composition for asynchronous functions.[Use Array.prototype.reduce() and the spread operator (...) to perform function composition using Promise.prototype.then().The functions can return a combination of normal values, Promises or be async, returning through await.All functions must accept a single argument.]
+-->
+
+const composeAsync = (...funcs) => arg => {
+  return funcs.reduce(async (prevPromise, func) => {
+    const result = await prevPromise;
+    return func(result);
+  }, Promise.resolve(arg));
+};
+
+// Example usage
+const asyncAdd1 = async x => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(x + 1);
+    }, 1000);
+  });
+};
+
+const asyncMultiplyBy2 = async x => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(x * 2);
+    }, 1000);
+  });
+};
+
+const asyncSubtract3 = async x => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(x - 3);
+    }, 1000);
+  });
+};
+
+const asyncOperations = composeAsync(asyncAdd1, asyncMultiplyBy2, asyncSubtract3);
+
+// Start with initial value of 5
+asyncOperations(5)
+  .then(result => {
+    console.log("Result:", result); // Output: Result: 7
+  })
+  .catch(error => {
+    console.error("Error occurred:", error);
+  });
+
+--------------------------------------------------------------------------------------------------------------
+
+8.Write a JavaScript program to convert an asynchronous function to return a promise.[Use currying to return a function returning a Promise that calls the original function. Use the rest operator (...) to pass in all the parameters.]
+-->
+
+const convertToPromise = asyncFunc => (...args) => asyncFunc(...args);
+const asyncAdd = async (a, b) => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(a + b);
+    }, 1000);
+  });
+};
+
+// Convert asynchronous function to return a promise
+const promisedAdd = convertToPromise(asyncAdd);
+promisedAdd(5, 10)
+  .then(result => console.log("Result:", result)) // Output: Result: 15
+  .catch(error => console.error("Error occurred:", error));
+
+---------------------------------------------------------------------------------------------------------------
+
+Q9.Write a JavaScript program to check whether the given argument is a symbol.[Use typeof to check if a value is classified as a symbol primitive.]
+-->
+
+const isSymbol = (value) => {
+  return typeof value === 'symbol';
+};
+const symbolValue = Symbol("example");
+const stringValue = "example";
+
+console.log(isSymbol(symbolValue)); // Output: true
+console.log(isSymbol(stringValue)); // Output: false
+
+----------------------------------------------------------------------------------------------------------------
+10.create a web page using html and css which have div class="results" with two vehicle type in form which have radio button for car and truck also create button using onclick="processData(this.form)", create another div whose class="resultText'' and p tag whose id="result" using this id print a text when click on submit. In script tag we have three class vehicle whose child class are car and truck.This three have run() methods and also have function processData(form).expect output:
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vehicle Type</title>
+<style>
+    .results {
+        margin: 20px;
+        padding: 20px;
+        border: 1px solid #ccc;
+    }
+    .resultText {
+        margin-top: 20px;
+    }
+</style>
+</head>
+<body>
+    <div class="results">
+        <form>
+            <label>
+                <input type="radio" name="vehicleType" value="car" checked> Car
+            </label>
+            <label>
+                <input type="radio" name="vehicleType" value="truck"> Truck
+            </label>
+            <br><br>
+            <button onclick="processData(this.form)">Submit</button>
+        </form>
+    </div>
+    <div class="resultText">
+        <p id="result"></p>
+    </div>
+
+    <script>
+        class Vehicle {
+            run() {
+                return "Vehicle is running.";
+            }
+        }
+
+        class Car extends Vehicle {
+            run() {
+                return "Car is running.";
+            }
+        }
+
+        class Truck extends Vehicle {
+            run() {
+                return "Truck is running.";
+            }
+        }
+
+        function processData(form) {
+            const vehicleType = form.querySelector('input[name="vehicleType"]:checked').value;
+            let vehicle;
+
+            if (vehicleType === "car") {
+                vehicle = new Car();
+            } else if (vehicleType === "truck") {
+                vehicle = new Truck();
+            }
+
+            const resultElement = document.getElementById("result");
+            resultElement.textContent = vehicle.run();
+        }
+    </script>
+</body>
+</html>
+
+-----------------------------------------------------------------------------------------------------------------
+11.Write a JavaScript program to iterate over a callback n times.[Use Function.prototype.call() to call fn n times or until it returns false.Omit the last argument, context, to use an undefined object (or the global object in non-strict mode).]
+-->
+
+const iterateNTimes = (fn, n) => {
+  for (let i = 0; i < n; i++) {
+    if (fn.call() === false) {
+      break;
+    }
+  }
+};
+
+// Example usage
+const callback = () => {
+  console.log("Callback function called");
+};
+
+iterateNTimes(callback, 5);
+
+---------------------------------------------------------------------------------------------------------------------
+
+12.Write a JavaScript program to split a multiline string into an array of lines.[Use String.prototype.split() and a regular expression to match line breaks and create an array.]
+-->
+
+const splitMultilineString = (multilineString) => {
+  return multilineString.split(/\r?\n/);
+};
+
+// Example usage
+const multilineString = `Line 1
+Line 2
+Line 3`;
+
+const linesArray = splitMultilineString(multilineString);
+console.log(linesArray);
+
+
+-----------------------------------------------------------------------------------------------------------------
+13.Write a JavaScript program that takes a function as an argument, then makes the first argument the last.[Use argument destructuring and a closure with variadic arguments.Splice the first argument, using the spread operator (...), to make it the last before applying the rest.]
+-->
+const rearrangeArguments = (func) => {
+  return (...args) => {
+    const [firstArg, ...restArgs] = args;
+    return func(...restArgs, firstArg);
+  };
+};
+
+// Example usage
+const originalFunction = (a, b, c) => {
+  console.log(a, b, c);
+};
+
+const modifiedFunction = rearrangeArguments(originalFunction);
+modifiedFunction(1, 2, 3); // Output: 2 3 1
+
+------------------------------------------------------------------------------------------------------------------
+
+14.Write a JavaScript program that takes a function as an argument, then makes the first argument the last.[Use argument destructuring and a closure with variadic arguments.Splice the first argument, using the spread operator (...), to make it the last before applying the rest.]
+-->
+
+const rearrangeArguments = (func) => {
+  return (...args) => {
+    const [firstArg, ...restArgs] = args;
+    return func(...restArgs, firstArg);
+  };
+};
+
+// Example usage
+const originalFunction = (a, b, c) => {
+  console.log(a, b, c);
+};
+
+const modifiedFunction = rearrangeArguments(originalFunction);
+modifiedFunction(1, 2, 3); // Output: 2 3 1
+
+--------------------------------------------------------------------------------------------------------------------------
+
+
+15.Write a JavaScript program that creates a class called "BankAccount" with properties for account number and balance.Include methods to deposit and withdraw money from the account. Create some instances of the "BankAccount" class, deposit some money, and withdraw a portion of it.
+create a module with the name main.js and create/define a three functions 
+-->
+
+class BankAccount {
+  constructor(accountNumber, balance) {
+    this.accountNumber = accountNumber;
+    this.balance = balance;
+  }
+
+  deposit(amount) {
+    this.balance += amount;
+    console.log(`Deposited $${amount}. New balance: $${this.balance}`);
+  }
+
+  withdraw(amount) {
+    if (amount > this.balance) {
+      console.log("Insufficient funds");
+    } else {
+      this.balance -= amount;
+      console.log(`Withdrawn $${amount}. New balance: $${this.balance}`);
+    }
+  }
+}
+
+// Create instances of BankAccount class
+const account1 = new BankAccount("123456789", 1000);
+const account2 = new BankAccount("987654321", 500);
+
+// Deposit and withdraw money
+account1.deposit(500);
+account1.withdraw(200);
+
+account2.deposit(100);
+account2.withdraw(600);
+class BankAccount {
+  constructor(accountNumber, balance) {
+    this.accountNumber = accountNumber;
+    this.balance = balance;
+  }
+
+  deposit(amount) {
+    this.balance += amount;
+    console.log(`Deposited $${amount}. New balance: $${this.balance}`);
+  }
+
+  withdraw(amount) {
+    if (amount > this.balance) {
+      console.log("Insufficient funds");
+    } else {
+      this.balance -= amount;
+      console.log(`Withdrawn $${amount}. New balance: $${this.balance}`);
+    }
+  }
+}
+
+// Create instances of BankAccount class
+const account1 = new BankAccount("123456789", 1000);
+const account2 = new BankAccount("987654321", 500);
+
+// Deposit and withdraw money
+account1.deposit(500);
+account1.withdraw(200);
+
+account2.deposit(100);
+account2.withdraw(600);
+
+----------------------------------------------------------------------------------------------------------------------
+
+16.create a module with the name main.js and create/define a three functions getPower(), capitalize(), roundToDecimalPlace() and export two function {capitalize,roundToDecimalPlace} and import it from main.js in displayTotal.js and here create displayTotal() function and export it in displayTotal.js file
+-->
+
+// main.js module
+const getPower = (base, exponent) => {
+  return Math.pow(base, exponent);
+};
+const capitalize = (str) => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+const roundToDecimalPlace = (num, decimalPlaces) => {
+  return Number(num.toFixed(decimalPlaces));
+};
+module.exports = { capitalize, roundToDecimalPlace };
+
+
+// displayTotal.js module
+
+const { capitalize, roundToDecimalPlace } = require('./main.js');
+const displayTotal = (total) => {
+  const capitalizedTotal = capitalize(total: $${total});
+  const roundedTotal = roundToDecimalPlace(total, 2);
+  console.log(${capitalizedTotal}, rounded to 2 decimal places: ${roundedTotal});
+};
+
+module.exports = displayTotal;
+
+_____________________________________________________________________________________________________________________________________________
+
+							TypeScript
+
+1. Write a TypeScript program that declares a variable name and assigns it a string value. Also declare a variable age and assign it a number value. Finally print the values of name and age.
+-->
+let name: string = "Alice";
+let age: number = 25;
+console.log(`Name: ${name}`);
+console.log(`Age: ${age}`);
+---------------------------------------------------------------------------------------------------------------------------------------
+
+2. Write a TypeScript program that declares variables using let, const, and var. Then, describe how each declaration type behaves with respect to scoping and mutability.
+-->
+let a: number = 10;
+{
+    let a: number = 20;
+    console.log("Inside block:", a); 
+}
+console.log("Outside block:", a); 
+
+const b: number = 30;
+console.log("Value of b:", b); 
+
+var c: number = 50; 
+{
+    var c: number = 60;
+    console.log("Inside block:", c); 
+}
+console.log("Outside block:", c);
+_____________________________________________________________________________________________________________________________________
+
+3.Write a TypeScript program that converts a variable of one type to another using type assertions and type conversion functions like parseInt().
+-->
+// Using type assertion
+let numStr: any = "10";
+let num: number = <number>numStr; // Type assertion
+console.log("Using type assertion:", num); // Output: 10
+
+// Using parseInt() function
+let strNum: string = "20";
+let parsedNum: number = parseInt(strNum);
+console.log("Converted string to number using parseInt():", parsedNum); // Output: 20
+______________________________________________________________________________________________________________________________________
+
+4.Write a TypeScript program that defines an enumeration 'Color' with values 'Red', 'Green', 'White' and Blue. Create a variable 'selectedColor' of type 'Color' and assign it one of the enumeration values.
+-->
+// Define an enumeration Color
+enum Color {
+    Red = 'Red',
+    Green = 'Green',
+    White = 'White',
+    Blue = 'Blue'
+}
+
+// Create a variable selectedColor of type Color
+let selectedColor: Color;
+
+// Assign one of the enumeration values to selectedColor
+selectedColor = Color.Green;
+
+// Print the selectedColor
+console.log("Selected Color:", selectedColor); 
+_______________________________________________________________________________________________________________________________________
+
+5. Write a TypeScript generic function that accepts two arguments: an array of any type and two indices. The function should swap the elements at the specified indices and return the modified array.
+-->
+function swapElements<T>(arr: T[], index1: number, index2: number): T[] {
+    if (index1 < 0 || index1 >= arr.length || index2 < 0 || index2 >= arr.length) {
+        throw new Error("Indices out of bounds");
+    }
+
+    // Swap elements
+    [arr[index1], arr[index2]] = [arr[index2], arr[index1]];
+
+    return arr;
+}
+
+// Example usage
+let array1: number[] = [1, 2, 3, 4, 5];
+console.log("Original Array:", array1); // Original Array: [1, 2, 3, 4, 5]
+let swappedArray: number[] = swapElements(array1, 1, 3);
+console.log("Swapped Array:", swappedArray); // Swapped Array: [1, 4, 3, 2, 5]
+_______________________________________________________________________________________________________________________________________
+
+
+6. Write a TypeScript class called Bus with the properties make, model, and year. Implement a constructor that initializes these properties when a Bus object is created.
+-->
+class Bus {
+    // Properties of the Bus class
+    make: string;
+    model: string;
+    year: number;
+
+    // Constructor that initializes the properties when a Bus object is created
+    constructor(make: string, model: string, year: number) {
+        this.make = make;
+        this.model = model;
+        this.year = year;
+    }
+
+    // Method to display the Bus information
+    displayInfo(): void {
+        console.log(`Bus Information:
+        Make: ${this.make}
+        Model: ${this.model}
+        Year: ${this.year}`);
+    }
+}
+
+// Example usage:
+const myBus = new Bus('Mercedes-Benz', 'Sprinter', 2022);
+
+// Display the bus information
+myBus.displayInfo();
+______________________________________________________________________________________________________________________________________
+
+7. Write a TypeScript class that defines a base class Car with properties like make, model, and year, along with a start() method that prints a starting message. Now create a class called Engine with the properties horsepower and fuelType. Modify the Car class to include an instance of the Engine class as a property. Implement a method printCarDetails() in the Car class that prints both car and engine details.
+-->
+
+class Engine {
+    horsepower: number;
+    fuelType: string;
+
+    constructor(horsepower: number, fuelType: string) {
+        this.horsepower = horsepower;
+        this.fuelType = fuelType;
+    }
+}
+
+class Car {
+    make: string;
+    model: string;
+    year: number;
+    engine: Engine;
+
+    constructor(make: string, model: string, year: number, engine: Engine) {
+        this.make = make;
+        this.model = model;
+        this.year = year;
+        this.engine = engine;
+    }
+
+    start(): void {
+        console.log("The car is starting...");
+    }
+
+    printCarDetails(): void {
+        console.log("Car details:");
+        console.log("Make:", this.make);
+        console.log("Model:", this.model);
+        console.log("Year:", this.year);
+        console.log("Engine details:");
+        console.log("Horsepower:", this.engine.horsepower);
+        console.log("Fuel Type:", this.engine.fuelType);
+    }
+}
+
+// Example usage
+let myEngine = new Engine(200, "Petrol");
+let myCar = new Car("Toyota", "Camry", 2022, myEngine);
+
+myCar.start(); // Output: The car is starting...
+myCar.printCarDetails();
+______________________________________________________________________________________________________________________________________
+
+8.Write a TypeScript module that exports a class called Student with properties name and age. Import the Student class in another TypeScript file, create instances of Student, and display their information.
+-->
+
+student.ts
+
+export class Student {
+        name: string;
+    age: number;
+    constructor(name: string, age: number) {
+        this.name = name;
+        this.age = age;
+    }
+    displayInfo(): void {
+        console.log(`Student Name: ${this.name}`);
+        console.log(`Student Age: ${this.age}`);
+    }
+}
+
+app.js
+
+import { Student } from './student';
+const student1 = new Student('Alice', 20);
+const student2 = new Student('Bob', 22);
+
+console.log('Student 1:');
+student1.displayInfo();
+
+console.log('Student 2:');
+student2.displayInfo();
+_____________________________________________________________________________________________________________________________________
+
+9.Write a TypeScript module that exports multiple functions and variables using named exports. Import specific named exports in a separate TypeScript file and use them.
+-->
+
+untitald.ts
+
+export const greeting: string = 'Hello, TypeScript!';
+export function add(a: number, b: number): number {
+    return a + b;
+}
+export function multiply(a: number, b: number): number {
+    return a * b;
+}
+export function sayHello(): void {
+    console.log(greeting);
+}
+
+
+app.ts
+
+import { greeting, add, multiply, sayHello } from './untitald';
+console.log(greeting);
+const sum = add(3, 5);
+console.log(`Sum: ${sum}`);
+const product = multiply(4, 6);
+console.log(`Product: ${product}`);
+sayHello();
+_____________________________________________________________________________________________________________________________________
+
+10. Write a TypeScript module that exports a default function or class. Import the default export into another TypeScript file and use it to perform a task or create an instance.main.ts
+-->
+
+myModule.ts
+
+function greet(name: string): string {
+    return `Hello, ${name}!`;
+}
+export default greet;
+
+main.ts
+
+import greet from './myModule';
+const greetingMessage = greet('Alice');
+console.log(greetingMessage); // Prints: "Hello, Alice!"
+_______________________________________________________________________________________________________________________________________
+14.Write a function print ShapeInfo(shape: Circle | Rectangle) that prints the area of the shape Use type narrowing to determine whether the shape is a Circle or Rectangle. Use type guards to safely access the properties specific to each shape type (take user input)
+-->
+
+interface Circle {
+    radius: number;
+    type: 'circle'; 
+}
+
+// Define the Rectangle type
+interface Rectangle {
+    width: number;
+    height: number;
+    type: 'rectangle'; 
+}
+
+function calculateCircleArea(circle: Circle): number {
+    return Math.PI * circle.radius * circle.radius;
+}
+
+function calculateRectangleArea(rectangle: Rectangle): number {
+    return rectangle.width * rectangle.height;
+}
+
+function printShapeInfo(shape: Circle | Rectangle): void {
+    if (shape.type === 'circle') {
+        const area = calculateCircleArea(shape);
+        console.log(`Circle Area: ${area.toFixed(2)}`);
+    } else if (shape.type === 'rectangle') {
+        // The shape is a Rectangle, so use the calculateRectangleArea function
+        const area = calculateRectangleArea(shape);
+        console.log(`Rectangle Area: ${area}`);
+    } else {
+        console.error('Unknown shape type');
+    }
+}
+
+// Example usage:
+const circle: Circle = {
+    radius: 5,
+    type: 'circle'
+};
+
+const rectangle: Rectangle = {
+    width: 4,
+    height: 6,
+    type: 'rectangle'
+};
+
+printShapeInfo(circle); // Outputs the area of the circle
+printShapeInfo(rectangle); // Outputs the area of the rectangle
+
+
+
+								NODE.JS
+
+1.ON MODULE
+Create a new module file named math.js that exports two functions: add and subtract. Implement each function to perform addition and subtraction of two numbers, respectively.Create a new file named app.js and import the math module. Use the add and subtract functions to perform arithmetic operations and display the results in the console.
+--->
+
+// math.js
+function add(a, b) {
+    return a + b;
+}
+
+function subtract(a, b) {
+    return a - b;
+}
+
+module.exports = { add, subtract };
+
+
+// app.js
+const math = require('./math');
+
+const num1 = 10;
+const num2 = 5;
+
+const sum = math.add(num1, num2);
+const difference = math.subtract(num1, num2);
+
+console.log(`The sum of ${num1} and ${num2} is: ${sum}`);
+console.log(`The difference between ${num1} and ${num2} is: ${difference}`);
+_________________________________________________________________________________________________________________________________________________
+
+2.ON CALLBACK
+Write an asynchronous function named delayedMessage that takes a
+callback function as an argument. Inside the function, use setTimeout to
+delay execution for 2 seconds, then invoke the callback function with the
+message "Delayed message".Call the delayedMessage function and provide a callback function to handle the delayed message. Display the received message in the console.
+-->
+
+function delayedMessage(callback) {
+    setTimeout(() => {
+        const message = "Delayed message";
+        callback(message);
+    }, 2000); // 2 sec delay
+}
+
+function handleMessage(message) {
+    console.log(message);
+}
+delayedMessage(handleMessage);
+_________________________________________________________________________________________________________________________________________________
+
+3.On Event Handling
+Create an event emitter instance and define an event named greet.Implement a listener for the greet event that prints "Hello, Event!" to the console.Emit the greet event and observe the output in the console.
+-->
+
+// Import the EventEmitter class from the events module
+const EventEmitter = require('events');
+const eventEmitter = new EventEmitter();
+
+// Define a listener function for the greet event
+function greetListener() {
+    console.log("Hello, Event!");
+}
+
+// Add the greetListener function as a listener for the greet event
+eventEmitter.on('greet', greetListener);
+
+// Emit the greet event
+eventEmitter.emit('greet');
+______________________________________________________________________________________________________________________________________________
+
+4.On Streams and buffers
+Create a readable stream to read data from a text file named data.txt. Use the fs module to create the stream. Implement event listeners for the data and end events of the stream. Display the received data and a message indicating the end of the stream in the console.
+--->
+
+// Import the fs module
+const fs = require('fs');
+
+// Create a readable stream from the file data.txt
+const readableStream = fs.createReadStream('data.txt', 'utf8');
+
+// Event listener for the data event
+readableStream.on('data', (chunk) => {
+    // Display the received data in the console
+    console.log(`Received data chunk: ${chunk}`);
+});
+
+// Event listener for the end event
+readableStream.on('end', () => {
+    // Display a message indicating the end of the stream in the console
+    console.log('End of stream');
+});
+___________________________________________________________________________________________________________________________________________________
+
+REACT CALCULTOR
+
+npx create-react react-calci
+cd calci
+npm start
+
+App.css
+
+.calculator {
+  width: 300px;
+  margin: 0 auto;
+  padding: 20px;
+  margin-top: 50px;
+  padding-right: 30px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #ebc1de;
+}
+
+input[type="text"] {
+  width: 93%;
+  margin-bottom: 10px;
+  padding: 10px;
+  font-size: 18px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 10px;
+}
+
+button {
+  padding: 15px;
+  font-size: 18px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #fff;
+}
+
+button:hover {
+  background-color: #f0f0f0;
+}
+
+.result {
+  margin-top: 10px;
+  padding: 10px;
+  font-size: 18px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+App.js
+
+import React from "react";
+import Calculator from "./components/Calculator";
+import "./App.css";
+
+function App() {
+  return (
+    <div className="App">
+      <Calculator />
+    </div>
+  );
+}
+
+export default App;
+__________________________________________________________________________________________________________________________________________________
+
+REACT LOGIN PAGE
+
+App.css
+
+.App {
+  text-align: center;
+}
+
+.form{
+  border: 1px solid rgb(216, 31, 133);
+  margin:150px 550px;
+  padding: 20px;
+}
+
+h1{
+  text-align: initial;
+  
+}
+
+input[type="text"] {
+  text-align: initial;
+  
+}
+
+input[type="password"] {
+  text-align: initial;
+}
+
+input[type="submit"] {
+  padding: 8px 14px;
+  margin: 2px;
+  background-color: rgb(31, 48, 205);
+}
+
+
+App.js
+
+import './App.css';
+
+function App() {
+  return (
+    <div className="App">
+      <div className="form">
+        <h1>Sign In</h1>
+
+        Username <br/> <input type="text" name="Username"/>
+        <br/>
+        Password  <br/><input type="password" name="password" />
+        <br/>
+        <br/>
+
+        <input type="submit" name="submit" value="Submit"/>
+        <br/>
+        </div>
+          
+    </div>
+  );
+}
+
+export default App;
+__________________________________________________________________________________________________________________________________________________
+
+ASSIGNMENT 1
+
+REGISTRATION FORM
+==================
+Q.0 Create a simple Website, Which has a Student Registration Form. (Using HTML & Using css)
+=>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Registration Form</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Student Registration Form</h2>
+    <form action="#">
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone:</label>
+        <input type="tel" id="phone"
+____________________________________________________________________________________________________________________________________________________________
+
+3 COLUMNS
+==========
+
+Q.1 Create a Container and add rows inside it inside rows with equal width using bootstrap(use Grid System).
+=>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bootstrap Grid System</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="bg-primary text-white p-3 mb-3">Column 1</div>
+    </div>
+    <div class="col-md-4">
+      <div class="bg-secondary text-white p-3 mb-3">Column 2</div>
+    </div>
+    <div class="col-md-4">
+      <div class="bg-info text-white p-3 mb-3">Column 3</div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="bg-warning text-white p-3 mb-3">Column 4</div>
+    </div>
+    <div class="col-md-4">
+      <div class="bg-danger text-white p-3 mb-3">Column 5</div>
+    </div>
+    <div class="col-md-4">
+      <div class="bg-success text-white p-3 mb-3">Column 6</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
+__________________________________________________________________________________________________________________________________________________________________
+
+PAGINATION
+===========
+
+Q.2 Write a BootStrap Program for the following, "the table class adds basic styling (Light Padding, Stripped Dividers, hover to every row and add only horizontal dividers) to a table". Table can have the First Name, Last Name, Mobile Number and EmailID as Columns, also add pagination at the add of table
+=>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bootstrap Table with Pagination</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+  <h2>Student Details</h2>
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Mobile Number</th>
+        <th>Email ID</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>John</td>
+        <td>Doe</td>
+        <td>1234567890</td>
+        <td>john@example.com</td>
+      </tr>
+      <tr>
+        <td>Jane</td>
+        <td>Smith</td>
+        <td>9876543210</td>
+        <td>jane@example.com</td>
+      </tr>
+      <!-- Add more rows as needed -->
+    </tbody>
+  </table>
+
+  <!-- Pagination -->
+  <ul class="pagination justify-content-center">
+    <li class="page-item disabled">
+      <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+    </li>
+    <li class="page-item"><a class="page-link" href="page1.html">1</a></li>
+    <li class="page-item"><a class="page-link" href="page2.html">2</a></li>
+    <li class="page-item"><a class="page-link" href="page3.html">3</a></li>
+    <li class="page-item">
+      <a class="page-link" href="next.html">Next</a>
+    </li>
+  </ul>
+</div>
+
+</body>
+</html>
+_______________________________________________________________________________________________________________________________________________________________
+
+BLOCKS
+======
+
+Q.3 create afollowing bootstrap web layout design.there are 9 blocks of region in the arrangement.you can euther the images in them or the contents.
+=>
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+  </head>
+  <body>
+    <div class="container mt-5">
+        <table class="table m-2">
+            <thead>
+              
+            </thead>
+            <tbody >
+
+                <tr>
+                    <td  class=" col-xs bg-primary w-40">block 1</td>
+                    <td colspan="2" class="col-xxl bg-info w-60">block 2</td>
+                                        
+                  </tr>
+
+              <tr>
+                <td rowspan="2" class="col bg-info ">block 3</td>
+                <td rowspan="3" class="col bg-primary ">block 6</td>
+                <td scope="col" class="bg-info ">block 7</td> 
+              </tr>
+
+              <tr> 
+                <td class="col-sm bg-primary ">block 8</td>
+              </tr>
+              
+              <tr>
+                <td class="new col-xs bg-primary w-50">block 4</td>
+                <td class="new col-xs bg-info w-50 ">block 5</td>
+                <td class="col bg-primary">block 9</td>
+              </tr>
+              <style>
+                .new{
+                    display: inline-flex;
+                }
+
+                /* tr{
+                    margin-bottom: 5px;
+                } */
+                
+              </style>
+            </tbody>
+          </table>
+    </div>
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    -->
+  </body>
+</html>
+_______________________________________________________________________________________________________________________________________________________
+
+DROPDOWN
+========
+
+Q.4 create following bootstrap web layout design which have simple side nav bar which have dropdown and dropdown divider for one nav tab and create form class="d-flex" for search box and input class="form-control me-2" type="search" placeholder="search" button class="btn btn-outline-success" type="submit".
+=>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bootstrap Layout</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Adjust styles as needed */
+    .sidebar {
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container-fluid">
+  <div class="row">
+    <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+      <div class="sidebar-sticky">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link active" href="#">
+              Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              Orders
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Dropdown
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="#">Action</a>
+              <a class="dropdown-item" href="#">Another action</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">Separated link</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Dashboard</h1>
+        <form class="d-flex">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+      </div>
+      
+      <!-- Content here -->
+    </main>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
+_________________________________________________________________________________________________________________________________________________________________
+
+ICONS
+======
+
+Q.5 Q.5 Create a website which has horizontal nav(Home will be in active state, And shop and support are not active) with glyphicons and breadcrumbs to show directory type, Add thumbnail 3 images which will be in equal size and add footer at bottom with @copyright 2024 (your company name). All rights reserved(OutPut must be like these).
+=> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Website</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    /* Add custom styles here */
+    .navbar {
+      margin-bottom: 0;
+    }
+    .footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 10px 0;
+    }
+    .thumbnail {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Project Name</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="#"><i class="glyphicon glyphicon-home"></i> Home</a></li>
+      <li><a href="#"><i class="glyphicon glyphicon-shopping-cart"></i> Shop</a></li>
+      <li><a href="#"><i class="glyphicon glyphicon-earphone"></i> Support</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container">
+  <ul class="breadcrumb">
+    <li><a href="#">Home</a></li>
+    <li><a href="#">Tutorials</a></li>
+    <li class="active">HTML</li>
+  </ul>
+
+  <div class="row">
+    <div class="col-md-4">
+      <div class="thumbnail">
+        <img src="https://via.placeholder.com/300" alt="Thumbnail Image">
+        <div class="caption">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="thumbnail">
+        <img src="https://via.placeholder.com/300" alt="Thumbnail Image">
+        <div class="caption">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="thumbnail">
+        <img src="https://via.placeholder.com/300" alt="Thumbnail Image">
+        <div class="caption">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>&copy; 2024 Your Company Name. All rights reserved.</p>
+  </div>
+</footer>
+
+</body>
+</html>
+_____________________________________________________________________________________________________________________________________________________________
 
 
